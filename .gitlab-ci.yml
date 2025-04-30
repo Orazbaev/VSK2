@@ -1,0 +1,33 @@
+image: openjdk:17-jdk
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+stages:
+  - test
+  - build
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+test:
+  stage: test
+  script:
+    - chmod +x ./gradlew
+    - ./gradlew test
+  tags:
+    - android
+
+build:
+  stage: build
+  script:
+    - chmod +x ./gradlew
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+      - app/build/outputs/apk/debug/app-debug.apk
+    expire_in: 1 week
+  tags:
+    - android
